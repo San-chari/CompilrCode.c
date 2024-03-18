@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Function prototypes
+bool recognize_a(char *str);
+bool recognize_a_star_b_plus(char *str);
+bool recognize_abb(char *str);
+
+int main() {
+    char input[100];
+    
+    printf("Enter a string: ");
+    scanf("%s", input);
+    
+    if (recognize_a(input))
+        printf("The string is recognized under 'a'.\n");
+    else if (recognize_a_star_b_plus(input))
+        printf("The string is recognized under 'a*b+'.\n");
+    else if (recognize_abb(input))
+        printf("The string is recognized under 'abb'.\n");
+    else
+        printf("The string does not match any of the given regular expressions.\n");
+    
+    return 0;
+}
+
+bool recognize_a(char *str) {
+    return (strlen(str) == 1 && str[0] == 'a');
+}
+
+bool recognize_a_star_b_plus(char *str) {
+    int len = strlen(str);
+    int i = 0;
+    
+    if (len < 2 || str[0] != 'a')
+        return false;
+    
+    while (i < len && str[i] == 'a')
+        i++;
+    
+    while (i < len && str[i] == 'b')
+        i++;
+    
+    return i == len; // If i equals the length of the string, it means all characters were 'a' or 'b'.
+}
+
+bool recognize_abb(char *str) {
+    int len = strlen(str);
+    
+    if (len != 3 || str[0] != 'a' || str[1] != 'b' || str[2] != 'b')
+        return false;
+    
+    return true;
+} 
