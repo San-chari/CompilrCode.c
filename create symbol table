@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to represent a symbol entry in the symbol table
+typedef struct {
+    char label[50];
+    int address;
+} SymbolEntry;
+
+// Function prototypes
+void insertSymbol(SymbolEntry table[], int *size);
+void displaySymbols(SymbolEntry table[], int size);
+void deleteSymbol(SymbolEntry table[], int *size);
+void searchAndModify(SymbolEntry table[], int size);
+
+int main() {
+    SymbolEntry symbolTable[100]; // Maximum 100 entries in the symbol table
+    int size = 0;
+    int choice;
+
+    while (1) {
+        printf("\nSymbol Table Operations\n");
+        printf("1. Insert a symbol\n");
+        printf("2. Display symbols\n");
+        printf("3. Delete a symbol\n");
+        printf("4. Search and Modify\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insertSymbol(symbolTable, &size);
+                break;
+            case 2:
+                displaySymbols(symbolTable, size);
+                break;
+            case 3:
+                deleteSymbol(symbolTable, &size);
+                break;
+            case 4:
+                searchAndModify(symbolTable, size);
+                break;
+            case 5:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+        }
+    }
+
+    return 0;
+}
+
+// Function to insert a symbol into the symbol table
+void insertSymbol(SymbolEntry table[], int *size) {
+    char label[50];
+    int address;
+
+    printf("Enter symbol label: ");
+    scanf("%s", label);
+
+    // Check if the symbol already exists
+    for (int i = 0; i < *size; i++) {
+        if (strcmp(table[i].label, label) == 0) {
+            printf("Duplicate Symbol!\n");
+            return;
+        }
+    }
+
+    printf("Enter address: ");
+    scanf("%d", &address);
+
+    strcpy(table[*size].label, label);
+    table[*size].address = address;
+    (*size)++;
+
+    printf("Symbol inserted successfully.\n");
+}
+
+// Function to display all symbols in the symbol table
+void displaySymbols(SymbolEntry table[], int size) {
+    if (size == 0) {
+        printf("Symbol table is empty.\n");
+        return;
+    }
+
+    printf("Symbol Table:\n");
+    printf("Label\t\tAddress\n");
+    for (int i = 0; i < size; i++) {
+        printf("%s\t\t%d\n", table[i].label, table[i].address);
+    }
+}
+
+// Function to delete a symbol from the symbol table
+void deleteSymbol(SymbolEntry table[], int *size) {
+    char label[50];
+    int found = 0;
+
+    if (*size == 0) {
+        printf("Symbol table is empty.\n");
+        return;
+    }
+
+    printf("Enter symbol label to delete: ");
+    scanf("%s", label);
+
+    for (int i = 0; i < *size; i++) {
+        if (strcmp(table[i].label, label) == 0) {
+            found = 1;
+            // Shift remaining symbols to fill the gap
+            for (int j = i; j < *size - 1; j++) {
+                strcpy(table[j].label, table[j + 1].label);
+                table[j].address = table[j + 1].address;
+            }
+            (*size)--;
+            printf("Symbol '%s' deleted successfully.\n", label);
+            break;
+        }
+    }
+
+    if (!found)
+        printf("Label Not found.\n");
+}
+
+// Function to search and modify a symbol in the symbol table
+void searchAndModify(SymbolEntry table[], int size) {
+    char label[50];
+    int found = 0;
+
+    if (size == 0) {
+        printf("Symbol table is empty.\n");
+        return;
+    }
+
+    printf("Enter symbol label to search and modify: ");
+    scanf("%s", label);
+
+    for (int i = 0; i < size; i++) {
+        if (strcmp(table[i].label, label) == 0) {
+            found = 1;
+            printf("Enter new label: ");
+            scanf("%s", table[i].label);
+            printf("Enter new address: ");
+            scanf("%d", &table[i].address);
+            printf("Symbol modified successfully.\n");
+            break;
+        }
+    }
+
+    if (!found)
+        printf("Label Not found.\n");
+}
